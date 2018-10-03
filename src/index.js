@@ -41,12 +41,23 @@ import Slider from "react-slick";
               var curr = obj[key]
               return {key, curr};
             });
-            console.log(resultss)
+            for (var i = 0; i < resultss.length; i++ ) {
+              this.state.dissapear.push({
+                'id': i,
+                'nation': resultss[i]['key'],
+                'currency': resultss[i]['curr'],
+                'status': 'inactive'
+              })
+              this.state.dissapear[0].status = 'active'
+            }
+            // console.log(this.state.dissapear)
             this.setState({
               isLoaded: true,
               items: result.data,
               currencybase: result1.base,
-              currencyall: resultss
+              currencyall: resultss,
+              currencystart: this.state.dissapear,
+              currencymodified: this.state.dissapear
             });
           },
           // Note: it's important to handle errors here
@@ -71,7 +82,7 @@ import Slider from "react-slick";
       event.preventDefault();
     }
     updateMessage() {
-      console.log(this.state.items)
+      // console.log(this.state.items)
       this.setState({
         message: 'my friend from changed state'
       });
@@ -91,14 +102,19 @@ import Slider from "react-slick";
     }
     handleClick(param){
       console.log(param)
-      document.getElementById(param.key).classList.add('dissapear')
+      // document.getElementById(param.key).classList.add('dissapear')
       this.state.dissapear.push(param)
       console.log(this.state.dissapear)
     }
-    handleClickPopping(param){
-      console.log(param)
-      document.getElementById(param).classList.remove('dissapear')
-      param.preventDefault();
+    handleClickPopping(event){
+      // alert(this.state.popping)
+      var index = this.state.currencymodified.findIndex(x => x.nation==this.state.popping)
+      if( index >= 0){
+        this.state.currencymodified[index].status = 'active'
+        this.setState({popping: this.state.popping});
+      } else {
+        alert('data not found')
+      }
     }
     openParamToList(param, param2){
       console.log(param2.carousel)
@@ -118,7 +134,8 @@ import Slider from "react-slick";
       var data = this.state.items
       var currency = this.state.currencybase
       var currencyall = this.state.currencyall
-      console.log(currencyall)
+      var currencymodified = this.state.currencymodified
+      // console.log(currencyall)
       var settings = {
         dots: true,
         infinite: true,
@@ -136,29 +153,39 @@ import Slider from "react-slick";
             </label>
             <input type="submit" value="Submit" />
           </form>
-          <form onSubmit={this.handleClickPopping}>
+          
             <label>
             <div>Pop more {currency}</div>
               <input type="text" value={this.state.popping} onChange={this.handleChangePopping} />
             </label>
-            <input type="submit" value="Submit" />
-          </form>
+            <input type="submit" value="Submit" onClick={() => this.handleClickPopping()}/>
+          
           <div>
-            {currencyall ? 
-              currencyall.map(curr =>
-                    <div id={curr.key} onClick={() => this.handleClick(curr)} key={curr.key}>
-                      <span>{curr.key} -> {curr.curr*this.state.inputcoin}</span>
-                    </div> 
+            {currencymodified ? 
+            currencymodified.map(listcurrency => 
+            <span key={listcurrency.nation}>{listcurrency.nation} &nbsp; &nbsp; &nbsp;</span>  )
+            : ''
+            }
+            {currencymodified ? 
+              currencymodified.map(curr =>
+                <div key={curr.nation} >{ curr.status == 'active' ? 
+                    (
+                      <div id={curr.nation} onClick={() => this.handleClick(curr)} key={curr.nation}>
+                        <span key={curr.nation}>{curr.nation} -> {curr.currency*this.state.inputcoin}</span>
+                      </div> 
+                     ) : ('')}
+                     </div>
                 ) : ''}</div>
-          {this.state.openDetail ? 
+
+          {/* {this.state.openDetail ? 
             <div>
               <button onClick={() => this.closeDetail()} style={{height: '150px'}}> close </button>
               <img src={this.state.detailItem.img_standard} width="100%" />
               {this.state.detailItem.caption}
             </div> :
             ''
-          }
-          {this.state.detailList ? (
+          } */}
+          {/* {this.state.detailList ? (
           <div style={{width: '400px', margin: '0 auto'}}>
             {data.length ?
               data.map(item => 
@@ -178,8 +205,8 @@ import Slider from "react-slick";
                 </section>
               ) : <h2>loading</h2> }
           </div>
-          ) : '' }
-          {this.state.detailList ? '' : ( 
+          ) : '' } */}
+          {/* {this.state.detailList ? '' : ( 
           <div style={{width: '400px', margin: '0 auto'}}>
             {data.length ?
             data.map(item => 
@@ -188,7 +215,7 @@ import Slider from "react-slick";
               </section>
             ) : <h2>loading</h2> }
           </div>
-          )}
+          )} */}
         </div>
       )
     }
@@ -200,8 +227,8 @@ import Slider from "react-slick";
     }
       render() {
         return (
-          <div>
-            <Hello message="Hello and Welcome"/>
+          <div key="1">
+            <Hello/>
           </div>
         )
       }
