@@ -100,6 +100,15 @@ import Slider from "react-slick";
         openDetail:  true
       })
     }
+    choiceCurrency(param){
+      var index = this.state.currencymodified.findIndex(x => x.nation==param)
+      if( index >= 0){
+        this.state.currencymodified[index].status = 'active'
+        this.setState({popping: param});
+      } else {
+        alert('data not found')
+      }
+    }
     handleClick(param){
       console.log(param)
       // document.getElementById(param.key).classList.add('dissapear')
@@ -163,7 +172,7 @@ import Slider from "react-slick";
           <div>
             {currencymodified ? 
             currencymodified.map(listcurrency => 
-            <span key={listcurrency.nation}>{listcurrency.nation} &nbsp; &nbsp; &nbsp;</span>  )
+            <span key={listcurrency.nation}  onClick={() => this.choiceCurrency(listcurrency.nation)} >{listcurrency.nation} &nbsp; &nbsp; &nbsp;</span>  )
             : ''
             }
             {currencymodified ? 
@@ -176,46 +185,6 @@ import Slider from "react-slick";
                      ) : ('')}
                      </div>
                 ) : ''}</div>
-
-          {/* {this.state.openDetail ? 
-            <div>
-              <button onClick={() => this.closeDetail()} style={{height: '150px'}}> close </button>
-              <img src={this.state.detailItem.img_standard} width="100%" />
-              {this.state.detailItem.caption}
-            </div> :
-            ''
-          } */}
-          {/* {this.state.detailList ? (
-          <div style={{width: '400px', margin: '0 auto'}}>
-            {data.length ?
-              data.map(item => 
-                <section className={'iniclass' + item.id}>
-                {item.carousel ? '' : (<img style={{width: '100%', display: 'inline-block'}}  src={item.img_standard} width="100%" key={item.id} alt={item.caption}/>     )}                  
-                 {item.carousel ? (
-                    <Slider {...settings}>             
-                    {item.carousel ? 
-                    ( item.carousel.map(itemimage => 
-                      <div class="ripit">
-                          <img src={itemimage.img_standard} width="100%" key={itemimage.id} alt={itemimage.caption}/>
-                      </div>
-                      )) : 'ksoong'}   
-                      </Slider>
-                 ):''}
-                <p>{item.caption}</p>
-                </section>
-              ) : <h2>loading</h2> }
-          </div>
-          ) : '' } */}
-          {/* {this.state.detailList ? '' : ( 
-          <div style={{width: '400px', margin: '0 auto'}}>
-            {data.length ?
-            data.map(item => 
-              <section className={'iniclass' + item.id}  style={{width: '30%', display: 'inline-block'}} >              
-              <img src={item.img_standard} width="100%" key={item.id} onClick={() => this.openParamToList('iniclass' + item.id, item)} alt={item.caption}/>
-              </section>
-            ) : <h2>loading</h2> }
-          </div>
-          )} */}
         </div>
       )
     }
