@@ -1,21 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import scrollToComponent from 'react-scroll-to-component';
-import scrollToElement from 'scroll-to-element';
-import Slider from "react-slick";
 
-  class Hello extends React.Component {
+  class CurrencyList extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        message: 'my friend frome state',
-        items: [],
-        firstitem: '',
-        detailItem: {},
-        openDetail: false,
-        Blue: '',
-        detailList: false,
         inputcoin: 10000,
         dissapear: [],
         popping: ''
@@ -24,20 +14,15 @@ import Slider from "react-slick";
       this.handleChangePopping = this.handleChangePopping.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleChange = this.handleChange.bind(this);
-      this.updateMessage = this.updateMessage.bind(this);
     }
     
     componentDidMount() {
-      Promise.all([
-        fetch("https://ot.tirto.id/tvr/instagram?page=1&limit=48"),
-        fetch("https://api.exchangeratesapi.io/latest?base=USD")
-      ])
-      .then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
+      fetch("https://api.exchangeratesapi.io/latest?base=USD")
+      .then(res2 =>res2.json())
         .then(
-          ([result, result1]) => {
+          (result1) => {
             var obj = result1.rates
             var resultss = Object.keys(obj).map(function(key) {
-              // var curr = parseFloat(obj[key]).toFixed(0)
               var curr = obj[key]
               return {key, curr};
             });
@@ -50,19 +35,13 @@ import Slider from "react-slick";
               })
               this.state.dissapear[0].status = 'active'
             }
-            // console.log(this.state.dissapear)
             this.setState({
-              isLoaded: true,
-              items: result.data,
               currencybase: result1.base,
               currencyall: resultss,
               currencystart: this.state.dissapear,
               currencymodified: this.state.dissapear
             });
           },
-          // Note: it's important to handle errors here
-          // instead of a catch() block so that we don't swallow
-          // exceptions from actual bugs in components.
           (error) => {
             this.setState({
               isLoaded: true,
@@ -81,27 +60,8 @@ import Slider from "react-slick";
       alert('A name was submitted: ' + this.state.inputcoin);
       event.preventDefault();
     }
-    updateMessage() {
-      // console.log(this.state.items)
-      this.setState({
-        message: 'my friend from changed state'
-      });
-      console.log('baba')
-    }
-    closeDetail() {
-      this.setState({
-        openDetail: false
-      })
-      console.log(this.state.openDetail) 
-    }
-    openDetailImage(param) {
-      this.setState({
-        detailItem: param,
-        openDetail:  true
-      })
-    }
     choiceCurrency(param){
-      var index = this.state.currencymodified.findIndex(x => x.nation==param)
+      var index = this.state.currencymodified.findIndex(x => x.nation===param)
       if( index >= 0){
         this.state.currencymodified[index].status = 'active'
         this.setState({popping: param});
@@ -117,7 +77,7 @@ import Slider from "react-slick";
     }
     handleClickPopping(event){
       // alert(this.state.popping)
-      var index = this.state.currencymodified.findIndex(x => x.nation==this.state.popping)
+      var index = this.state.currencymodified.findIndex(x => x.nation===this.state.popping)
       if( index >= 0){
         this.state.currencymodified[index].status = 'active'
         this.setState({popping: this.state.popping});
@@ -125,34 +85,9 @@ import Slider from "react-slick";
         alert('data not found')
       }
     }
-    openParamToList(param, param2){
-      console.log(param2.carousel)
-      console.log(param) 
-      this.setState({
-        detailList: true
-      })
-      setTimeout(() => {
-        scrollToElement('.' + param, {
-            offset: 0,
-            ease: 'linear',
-            duration: 1500
-        });
-      }, 10)
-    }
     render(){
-      var data = this.state.items
       var currency = this.state.currencybase
-      var currencyall = this.state.currencyall
       var currencymodified = this.state.currencymodified
-      // console.log(currencyall)
-      var settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        infinite: false
-      };
       return (
         <div>
           <form onSubmit={this.handleSubmit}>
@@ -177,7 +112,7 @@ import Slider from "react-slick";
             }
             {currencymodified ? 
               currencymodified.map(curr =>
-                <div key={curr.nation} >{ curr.status == 'active' ? 
+                <div key={curr.nation} >{ curr.status === 'active' ? 
                     (
                       <div id={curr.nation} onClick={() => this.handleClick(curr)} key={curr.nation}>
                         <span key={curr.nation}>{curr.nation} -> {curr.currency*this.state.inputcoin}</span>
@@ -191,13 +126,10 @@ import Slider from "react-slick";
   }
 
   class Fuser extends React.Component {
-    constructor(){
-      super();
-    }
       render() {
         return (
-          <div key="1">
-            <Hello/>
+          <div>
+            <CurrencyList/>
           </div>
         )
       }
