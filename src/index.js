@@ -1,18 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
   class CurrencyList extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        inputcoin: 10000,
+        inputcoin: 10,
         dissapear: [],
         popping: ''
       };
       this.handleClickPopping = this.handleClickPopping.bind(this)
       this.handleChangePopping = this.handleChangePopping.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
       this.handleChange = this.handleChange.bind(this);
     }
     
@@ -30,11 +30,11 @@ import './index.css';
               this.state.dissapear.push({
                 'id': i,
                 'nation': resultss[i]['key'],
-                'currency': resultss[i]['curr'],
+                'currency': parseFloat(resultss[i]['curr']).toFixed(0),
                 'status': 'inactive'
               })
-              this.state.dissapear[0].status = 'active'
             }
+            this.state.dissapear[0].status = 'active'
             this.setState({
               currencybase: result1.base,
               currencyall: resultss,
@@ -56,10 +56,6 @@ import './index.css';
     handleChangePopping(event) {
       this.setState({popping: event.target.value});
     }
-    handleSubmit(event) {
-      alert('A name was submitted: ' + this.state.inputcoin);
-      event.preventDefault();
-    }
     choiceCurrency(param){
       var index = this.state.currencymodified.findIndex(x => x.nation===param)
       if( index >= 0){
@@ -77,10 +73,10 @@ import './index.css';
     }
     handleClickPopping(event){
       // alert(this.state.popping)
-      var index = this.state.currencymodified.findIndex(x => x.nation===this.state.popping)
+      var index = this.state.currencymodified.findIndex(x => x.nation===this.state.popping.toUpperCase())
       if( index >= 0){
         this.state.currencymodified[index].status = 'active'
-        this.setState({popping: this.state.popping});
+        this.setState({popping: this.state.popping.toUpperCase()});
       } else {
         alert('data not found')
       }
@@ -90,36 +86,66 @@ import './index.css';
       var currencymodified = this.state.currencymodified
       return (
         <div>
-          <form onSubmit={this.handleSubmit}>
-            <label>
-            <div>Rate base in  {currency}</div>
-              <input type="text" value={this.state.inputcoin} onChange={this.handleChange} />
-            </label>
-            <input type="submit" value="Submit" />
-          </form>
-          
-            <label>
-            <div>Pop more {currency}</div>
-              <input type="text" value={this.state.popping} onChange={this.handleChangePopping} />
-            </label>
-            <input type="submit" value="Submit" onClick={() => this.handleClickPopping()}/>
-          
-          <div>
-            {currencymodified ? 
+          <div className="container header">
+            <div className="row">
+              <div className="col-6 currency py-3">
+                <span>{currency}</span>
+              </div>
+              <div className="col-6 text-center whitebg pl-0">
+                <span className="dols">$</span><input type="number" className="currency pl-4 py-3 noall" value={this.state.inputcoin} onChange={this.handleChange} />
+              </div>
+            </div>
+          </div>
+          <div className="container slide py-2">
+          {currencymodified ? 
             currencymodified.map(listcurrency => 
-            <span key={listcurrency.nation}  onClick={() => this.choiceCurrency(listcurrency.nation)} >{listcurrency.nation} &nbsp; &nbsp; &nbsp;</span>  )
+            <div className="choosercurrency mx-1" key={listcurrency.nation}  onClick={() => this.choiceCurrency(listcurrency.nation)} >{listcurrency.nation}</div>  )
             : ''
             }
-            {currencymodified ? 
-              currencymodified.map(curr =>
-                <div key={curr.nation} >{ curr.status === 'active' ? 
-                    (
-                      <div id={curr.nation} onClick={() => this.handleClick(curr)} key={curr.nation}>
-                        <span key={curr.nation}>{curr.nation} -> {curr.currency*this.state.inputcoin}</span>
-                      </div> 
-                     ) : ('')}
-                     </div>
-                ) : ''}</div>
+          </div>
+          <div className="container noborder">
+            <div className="row">
+                <div className="col-12">
+                {currencymodified ? 
+                  currencymodified.map(curr =>
+                    <div key={curr.nation} >
+                      { curr.status === 'active' ? 
+                        (
+                          <div className="row carding" id={curr.nation} onClick={() => this.handleClick(curr)} key={curr.nation}>
+                            <div className="col-12">
+                              <div className="row">
+                                <div className="col-6" key={curr.nation}>{curr.nation}</div> <div className="col-6 text-right">{curr.currency*this.state.inputcoin}</div>
+                              </div>
+                              <div className="row">
+                                <div className="col-12" key={curr.nation}>1 USD = {curr.nation} {curr.currency}</div>
+                              </div>
+                            </div>
+                          </div> 
+                        ) : ('')}
+                        </div>
+                        ) : 
+                      ''}
+                    </div>
+              </div>
+          </div>
+          
+           <div className="container stick pb-3 pt-2">
+              <div className="col-12">
+              <div className="row">
+                <div className="col-12 pl-0">
+                  <div className="whitefont">Add more currency</div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-8 pl-0">
+                  <input className="inputmore" type="text" placeholder="e.g IDR" value={this.state.popping} onChange={this.handleChangePopping} />
+                </div>
+                <div className="col-4 text-center addmore">
+                  <input className="whitefont mt-1" type="submit" value="Submit" onClick={() => this.handleClickPopping()}/>
+                </div>
+              </div>
+              </div>
+           </div>
         </div>
       )
     }
