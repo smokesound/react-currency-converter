@@ -65,11 +65,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
         alert('data not found')
       }
     }
-    handleClick(param){
-      console.log(param)
-      // document.getElementById(param.key).classList.add('dissapear')
-      this.state.dissapear.push(param)
-      console.log(this.state.dissapear)
+    deleteClick(param){
+      var index = this.state.currencymodified.findIndex(x => x.nation===param)
+      if( index >= 0){
+        this.state.currencymodified[index].status = 'inactive'
+        this.setState({popping: param});
+      } else {
+        alert('data not found')
+      }
     }
     handleClickPopping(event){
       // alert(this.state.popping)
@@ -111,13 +114,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
                     <div key={curr.nation} >
                       { curr.status === 'active' ? 
                         (
-                          <div className="row carding" id={curr.nation} onClick={() => this.handleClick(curr)} key={curr.nation}>
+                          <div className="row carding" id={curr.nation}>
                             <div className="col-12">
                               <div className="row">
                                 <div className="col-6" key={curr.nation}>{curr.nation}</div> <div className="col-6 text-right">{curr.currency*this.state.inputcoin}</div>
                               </div>
                               <div className="row">
-                                <div className="col-12" key={curr.nation}>1 USD = {curr.nation} {curr.currency}</div>
+                                <div className="col-8" key={curr.nation}>1 USD = {curr.nation} {curr.currency}</div>
+                                <div className="col-4 text-right delete" key={curr.nation} onClick={() => this.deleteClick(curr.nation)} key={curr.nation}> delete </div>
                               </div>
                             </div>
                           </div> 

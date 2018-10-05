@@ -7,6 +7,11 @@ html{
 .whitebg{
   background:#fff;
 }
+.delete{
+  font-size: 13px;
+    font-style: italic;
+    color: #d84242;
+}
 .addmore{
   background: #00a797;
   border-radius: 4px;
