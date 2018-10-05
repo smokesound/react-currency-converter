@@ -15,7 +15,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
       this.handleChangePopping = this.handleChangePopping.bind(this);
       this.handleChange = this.handleChange.bind(this);
     }
-    
     componentDidMount() {
       fetch("https://api.exchangeratesapi.io/latest?base=USD")
       .then(res2 =>res2.json())
@@ -154,7 +153,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
       )
     }
   }
-
   class Fuser extends React.Component {
       render() {
         return (
@@ -164,8 +162,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
         )
       }
   }
-
-  
   // ========================================
   
   ReactDOM.render(<Fuser />, document.getElementById("root"));
