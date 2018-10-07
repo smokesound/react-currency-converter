@@ -22,7 +22,7 @@
 }
 
 html{
-  overflow: hidden;
+  overflow-x: hidden;
 }
 .whitebg{
   background:#fff;
@@ -66,6 +66,16 @@ body {
   .container.slide{
     white-space: nowrap;
     overflow: scroll;
+    position: fixed;
+    top: 58px;
+    background: #fff;
+    z-index: 100;
+    border-bottom: 1px solid #ccc;
+  }
+  .container.noborder{
+    overflow: scroll;
+    padding-bottom: 80px;
+    padding-top: 110px;
   }
   .choosercurrency{
     display: inline-block;
@@ -110,6 +120,9 @@ body {
   .header{
     border-bottom: 1px solid #e8e8e8;
     background: #f9f9f9;
+    position: fixed;
+    top: 0;
+    z-index: 10;
   }
   .dissapear{
     display: none;
